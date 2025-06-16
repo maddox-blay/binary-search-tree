@@ -37,6 +37,37 @@ class Tree
     end
   end
 
+  def find(node = @root, value)
+    return nil if node.nil?
+    return node if node.value == value
+    
+    if node.value > value
+      find(node.left, value)
+    else
+        find(node.right, value)
+    end
+  end
+
+  def delete(node = @root, value)
+    return nil if node.nil?
+    if value > node.value
+      node.right = delete(node.right, value)
+    elsif value < node.value
+      node.left = delete(node.left, value)
+    else
+      return nil if node.left.nil? && node.right.nil?
+
+      return node.right if node.left.nil?
+      return node.left if node.right.nil?
+
+      smallest = node.right
+      smallest = smallest.left while smallest.left
+      node.value = smallest.value
+      node.right = delete(node.right ,smallest.value)
+    end
+    node
+  end
+
   def balance(_array, balanced_array = [])
     if _array.size <= 1
       balanced_array << _array[0] unless _array[0].nil?
